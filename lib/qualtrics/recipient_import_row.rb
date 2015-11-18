@@ -18,7 +18,7 @@ module Qualtrics
         'LastName'     => recipient.last_name,
         'Email'         => recipient.email,
         'EmbeddedData' => recipient.embedded_data,
-        'ExternalData' => recipient.external_data,
+        'ExternalRef' => recipient.external_data,
         'Unsubscribed'  => recipient.unsubscribed,
         'Language'      => recipient.language,
         'RecipientID'      => recipient.id
@@ -31,7 +31,7 @@ module Qualtrics
           'LastName',
           'Email',
           'EmbeddedData',
-          'ExternalData',
+          'ExternalRef',
           'Unsubscribed',
           'Language',
           'RecipientID'
