@@ -20,7 +20,8 @@ module Qualtrics
         'EmbeddedData' => recipient.embedded_data,
         'ExternalData' => recipient.external_data,
         'Unsubscribed'  => recipient.unsubscribed,
-        'Language'      => recipient.language
+        'Language'      => recipient.language,
+        'RecipientID'      => recipient.id
       }
     end
     class << self
@@ -32,7 +33,8 @@ module Qualtrics
           'EmbeddedData',
           'ExternalData',
           'Unsubscribed',
-          'Language'
+          'Language',
+          'RecipientID'
         ]
       end
     end
