@@ -38,6 +38,18 @@ module Qualtrics
       end
     end
 
+    def self.get_survey(id)
+      response = get('getSurveyName', {
+        'SurveyID' => id
+      })
+
+      if response.status == 200
+        response.result
+      else
+        false
+      end
+    end
+
     def retrieve_all_raw_responses(start_date, end_date)
       response = get('getLegacyResponseData', {
         'SurveyID' => id,

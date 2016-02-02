@@ -120,6 +120,12 @@ describe Qualtrics::Survey, :vcr => true  do
       expect(survey.deactivate).to be true
       survey.destroy
     end
+
+    it 'can get the information of a single survey' do
+      survey_import.save
+
+      expect(Qualtrics::Survey.get_survey(survey.id)).to_not be false
+    end
   end
 
 end
