@@ -44,9 +44,7 @@ module Qualtrics
       })
 
       if response.status == 200
-        response.result.map do |survey|
-          new(underscore_attributes(survey))
-        end
+        new(underscore_attributes(response.result))
       else
         false
       end
