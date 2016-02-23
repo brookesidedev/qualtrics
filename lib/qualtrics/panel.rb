@@ -18,6 +18,10 @@ module Qualtrics
       end
     end
 
+    def self.find_by_name(name)
+      self.all.select {|panel| panel.name == name}.first
+    end
+
     def self.attribute_map
       {
         'LibraryID' => :library_id,
@@ -56,6 +60,30 @@ module Qualtrics
           recipients: recipients
       })
       panel_import.save
+    end
+
+    def members(library_id = nil)
+      return @members if @members.present?
+
+      @members = Array.new
+      lib_id = library_id || configuration.default_library_id
+      response = get('getPanel', {'PanelID' => self.id, 'LibraryID' => lib_id})
+
+      response.body.each do |m|
+        options = {}
+        options[:id] = m["RecipientID"]
+        options[:panel_id] = m[self.id]
+        options[:email] = m["Email"]
+        options[:first_name] = m['FirstName']
+        options[:last_name] = m['LastName']
+        options[:external_data] = m['ExternalDataReference']
+        options[:embedded_data] = m['EmbeddedData']
+        options[:unsubscribed] = m['Unsubscribed']
+
+        @members << Qualtrics::Recipient.new(options)
+      end
+
+      @members
     end
 
     def destroy

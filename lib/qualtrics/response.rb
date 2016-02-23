@@ -3,6 +3,7 @@ require 'csv'
 
 module Qualtrics
 	class Response
+    attr_reader :raw_response
 
     def initialize(raw_response)
       @raw_response = raw_response
@@ -27,13 +28,11 @@ module Qualtrics
       @raw_response.status
     end
 
-    protected
-
     def body
       if @body.nil?
         if @raw_response.body == ''
           @body = {}
-        elsif content_type == 'application/json'
+        elsif (content_type == 'application/json') || (content_type.include?('text/plain'))
           @body = JSON.parse(@raw_response.body)
         elsif content_type == 'application/vnd.msexcel'
           @body = @raw_response.body
