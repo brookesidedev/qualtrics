@@ -4,10 +4,11 @@ require 'qualtrics/recipient_import_row'
 
 module Qualtrics
   class PanelImportFile
-    attr_reader :recipients
+    attr_reader :recipients, :panel_id
 
-    def initialize(recipients)
+    def initialize(recipients, panel_id = nil)
       @recipients = recipients
+      @panel_id = panel_id
     end
 
     def temp_file
@@ -26,7 +27,13 @@ module Qualtrics
     end
 
     def headers
-      Qualtrics::RecipientImportRow.new(@recipients.first).field_map.keys
+      keys = Qualtrics::RecipientImportRow.new(@recipients.first).field_map.keys
+      if @panel_id
+        keys
+      else
+        keys.delete_at(6)
+        keys
+      end
     end
   end
 end

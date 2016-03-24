@@ -7,9 +7,10 @@ module Qualtrics
     end
 
     def to_a
-      self.class.fields.map do |field|
-        field_map[field]
-      end.concat(sorted_embedded_data.values)
+      # self.class.fields.map do |field|
+      #   field_map[field]
+      # end.concat(sorted_embedded_data.values)
+      field_map.values
     end
 
     def sorted_embedded_data
