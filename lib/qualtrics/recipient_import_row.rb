@@ -9,6 +9,14 @@ module Qualtrics
     def to_a
       self.class.fields.map do |field|
         field_map[field]
+      end.concat(sorted_embedded_data.values)
+    end
+
+    def sorted_embedded_data
+      if recipient.embedded_data
+        recipient.embedded_data.sort_by{ |k, v| k }.to_h
+      else
+        {}
       end
     end
 
@@ -17,20 +25,19 @@ module Qualtrics
         'FirstName'    => recipient.first_name,
         'LastName'     => recipient.last_name,
         'Email'         => recipient.email,
-        'EmbeddedData' => recipient.embedded_data,
         'ExternalRef' => recipient.external_data,
         'Unsubscribed'  => recipient.unsubscribed,
         'Language'      => recipient.language,
         'RecipientID'      => recipient.id
-      }
+      }.merge(sorted_embedded_data)
     end
+
     class << self
       def fields
         [
           'FirstName',
           'LastName',
           'Email',
-          'EmbeddedData',
           'ExternalRef',
           'Unsubscribed',
           'Language',

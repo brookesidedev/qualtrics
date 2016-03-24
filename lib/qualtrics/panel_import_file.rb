@@ -15,7 +15,7 @@ module Qualtrics
         tmp_file = Tempfile.new('panel_import')
         csv_path = tmp_file.path
         tmp_file.close
-        CSV.open(csv_path, 'wb', :force_quotes => true, :write_headers => true, :headers => Qualtrics::RecipientImportRow.fields) do |csv|
+        CSV.open(csv_path, 'wb', :force_quotes => true, :write_headers => true, :headers => headers) do |csv|
           @recipients.each do |recipient|
             csv << Qualtrics::RecipientImportRow.new(recipient).to_a
           end
@@ -23,6 +23,10 @@ module Qualtrics
         @temp_file = csv_path
       end
       @temp_file
+    end
+
+    def headers
+      Qualtrics::RecipientImportRow.new(@recipients.first).field_map.keys
     end
   end
 end

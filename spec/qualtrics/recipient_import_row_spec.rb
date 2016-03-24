@@ -14,7 +14,6 @@ describe Qualtrics::RecipientImportRow do
       first_name: first_name,
       last_name: last_name,
       external_data: external_data,
-      embedded_data: embedded_data,
       unsubscribed: unsubscribed,
       language: language
     })
@@ -43,13 +42,10 @@ describe Qualtrics::RecipientImportRow do
     expect(recipient_row.to_a[index('LastName')]).to eql(last_name)
   end
 
-  it 'returns the external_data in the correct spot' do
-    expect(recipient_row.to_a[index('ExternalData')]).to eql(external_data)
+  it 'returns the external_ref in the correct spot' do
+    expect(recipient_row.to_a[index('ExternalRef')]).to eql(external_data)
   end
 
-  it 'returns the embedded_data in the correct spot' do
-    expect(recipient_row.to_a[index('EmbeddedData')]).to eql(embedded_data)
-  end
   it 'returns unsubscribed in the correct spot' do
     expect(recipient_row.to_a[index('Unsubscribed')]).to eql(unsubscribed)
   end
