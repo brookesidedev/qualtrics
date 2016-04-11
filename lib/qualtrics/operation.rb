@@ -1,6 +1,6 @@
 module Qualtrics
   class Operation
-    attr_reader :http_method, :action, :options, :entity_name, :command
+    attr_reader :http_method, :action, :options, :entity_name, :command, :content_type
     REQUEST_METHOD_WHITELIST = [:get, :post]
     @@listeners = []
 
@@ -8,6 +8,7 @@ module Qualtrics
       @http_method = http_method
       @action = action
       @options = options
+      @contact_type = options[:contact_type]
       @entity_name = action.gsub(/(create|delete|update)/, '')
       @body_override = body_override
       @command = $1
@@ -27,6 +28,9 @@ module Qualtrics
         query_params = query
         raw_resp = connection.send(http_method, path, body) do |req|
           req.params = query_params
+          if @contact_type
+            req.headers['Content-Type'] = @contact_type
+          end
         end
       else
         body = query

@@ -32,6 +32,7 @@ module Qualtrics
       payload = headers
       payload['LibraryID'] = library_id
       payload['ColumnHeaders'] = 1
+      payload[:content_type] = 'multipart/formdata'
 
       if @embedded_data_columns.to_i > 0
         payload['EmbeddedData'] = ((headers.length + 1).. (headers.length + @embedded_data_columns.to_i)).to_a.join(',')
