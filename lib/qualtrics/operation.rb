@@ -8,7 +8,7 @@ module Qualtrics
       @http_method = http_method
       @action = action
       @options = options
-      @contact_type = options[:content_type]
+      @content_type = options[:content_type]
       @entity_name = action.gsub(/(create|delete|update)/, '')
       @body_override = body_override
       @command = $1
@@ -28,8 +28,8 @@ module Qualtrics
         query_params = query
         raw_resp = connection.send(http_method, path, body) do |req|
           req.params = query_params
-          if @contact_type
-            req.headers['Content-Type'] = @contact_type
+          if @content_type
+            req.headers['Content-Type'] = @content_type
           end
         end
       else
