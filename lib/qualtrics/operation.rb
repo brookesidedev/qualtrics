@@ -8,7 +8,7 @@ module Qualtrics
       @http_method = http_method
       @action = action
       @options = options
-      @contact_type = options[:contact_type]
+      @contact_type = options[:content_type]
       @entity_name = action.gsub(/(create|delete|update)/, '')
       @body_override = body_override
       @command = $1
