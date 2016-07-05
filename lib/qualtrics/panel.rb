@@ -52,7 +52,7 @@ module Qualtrics
 
     def add_recipients(recipients)
       panel_import = Qualtrics::PanelImport.new({
-          panel: self,
+          panel_id: self.id,
           recipients: recipients
       })
       panel_import.save

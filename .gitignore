@@ -22,4 +22,4 @@ tmp
 mkmf.log
 .env
 .idea
-.fixtures/vcr_cassettes
+spec/fixtures/vcr_cassettes

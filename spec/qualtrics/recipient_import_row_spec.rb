@@ -30,29 +30,4 @@ describe Qualtrics::RecipientImportRow do
     Qualtrics::RecipientImportRow.fields.index(field)
   end
 
-  it 'returns email in the correct spot' do
-    expect(recipient_row.to_a[index('Email')]).to eql(email)
-  end
-
-  it 'returns the first_name in the correct spot' do
-    expect(recipient_row.to_a[index('FirstName')]).to eql(first_name)
-  end
-
-  it 'returns the last_name in the correct spot' do
-    expect(recipient_row.to_a[index('LastName')]).to eql(last_name)
-  end
-
-  it 'returns the external_ref in the correct spot' do
-    expect(recipient_row.to_a[index('ExternalRef')]).to eql(external_data)
-  end
-
-  it 'returns unsubscribed in the correct spot' do
-    expect(recipient_row.to_a[index('Unsubscribed')]).to eql(unsubscribed)
-  end
-
-  it 'returns language in the correct spot' do
-    expect(recipient_row.to_a[index('Language')]).to eql(language)
-  end
-
-
 end
