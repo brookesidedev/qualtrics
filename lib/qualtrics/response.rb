@@ -33,9 +33,11 @@ module Qualtrics
       if @body.nil?
         if @raw_response.body == ''
           @body = {}
-        elsif content_type == 'application/json'
+        elsif content_type =~ /application\/json/
           @body = JSON.parse(@raw_response.body)
         elsif content_type == 'application/vnd.msexcel'
+          @body = @raw_response.body
+        elsif content_type =~ /text\/html/
           @body = @raw_response.body
         else
           raise Qualtrics::UnexpectedContentType, content_type
@@ -58,7 +60,11 @@ module Qualtrics
 
     private
     def error_message
-      body['Meta'].nil? ? 'No error message' : body['Meta']['ErrorMessage']
+      if content_type =~ /text\/html/
+        body
+      else
+        body['Meta'].nil? ? 'No error message' : body['Meta']['ErrorMessage']
+      end
     end
   end
 end

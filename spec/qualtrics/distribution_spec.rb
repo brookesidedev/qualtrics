@@ -103,6 +103,7 @@ describe Qualtrics::Distribution, vcr: true do
       recipient.save
       recipient2.save
       survey_import.save
+      survey.activate
       message.save
     end
 

@@ -2,50 +2,65 @@ require "qualtrics/panel_import_file"
 
 module Qualtrics
   class PanelImport < Entity
-    attr_accessor :panel, :recipients
+    attr_accessor :panel_id, :recipients, :id
 
     def initialize(options={})
-      @panel = options[:panel]
+      @id = options[:id]
+      @panel_id = options[:panel_id]
       @recipients = options[:recipients]
-      @embedded_data_columns = options[:embedded_data_columns]
     end
 
     def save
-      payload = set_headers
-      payload.delete('RecipientID')
+      #### using api v3, v2 does not work
+      file = Qualtrics::PanelImportFile.new(recipients)
+      payload = {}
+      payload['contacts'] = Faraday::UploadIO.new(file.temp_file, 'application/json')
 
-      @file = Qualtrics::PanelImportFile.new(@recipients)
-      post 'importPanel', payload, File.read(@file.temp_file)
-      true
-    end
-
-    def update_panel
-      payload = set_headers
-      payload['PanelID'] = @panel.id
-
-      @file = Qualtrics::PanelImportFile.new(@recipients, @panel.id)
-      post 'importPanel', payload, File.read(@file.temp_file)
-      true
-    end
-
-    def set_headers
-      payload = headers
-      payload['LibraryID'] = library_id
-      payload['ColumnHeaders'] = 1
-      payload[:content_type] = 'multipart/formdata'
-
-      if @embedded_data_columns.to_i > 0
-        payload['EmbeddedData'] = ((headers.length + 1).. (headers.length + @embedded_data_columns.to_i)).to_a.join(',')
+      raw_resp = connection.post(contact_import_path, payload) do |req|
+        req.headers['X-API-TOKEN'] = configuration.token
       end
 
-      payload
+      response = Qualtrics::Response.new(raw_resp)
+      if response.status == 200
+        self.id = response.send(:body)['result']['id']
+
+        check_import_status
+      else
+        false
+      end
     end
 
-    def headers
-      {}.tap do |import_headers|
-        Qualtrics::RecipientImportRow.fields.each_with_index.map do |field, index|
-          import_headers[field] = index + 1
+    def check_import_status(looped_times = 0)
+      if self.id && looped_times <= 6
+        raw_resp = connection.get([contact_import_path, '/', self.id].join('')) do |req|
+          req.headers['X-API-TOKEN'] = configuration.token
         end
+
+        response = Qualtrics::Response.new(raw_resp)
+        if response.send(:body)['result']['percentComplete'].to_i == 100
+          true
+        else
+          sleep 10
+          check_import_status(looped_times + 1)
+        end if response.status == 200
+      else
+        false
+      end
+    end
+
+    def contact_import_path
+      "/API/v3/mailinglists/#{panel_id}/contactimports"
+    end
+
+    private
+
+    def connection
+      @connection ||= Faraday.new(url: 'https://co1.qualtrics.com') do |faraday|
+        faraday.request  :multipart
+        faraday.request  :url_encoded
+        # faraday.response :logger, ::Logger.new(STDOUT), bodies: true
+        faraday.use ::FaradayMiddleware::FollowRedirects, limit: 3
+        faraday.adapter :net_http
       end
     end
   end

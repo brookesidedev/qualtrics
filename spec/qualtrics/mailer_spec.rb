@@ -92,10 +92,10 @@ describe Qualtrics::Mailer, :vcr do
     end
 
     before(:each) do
-
       panel.save
       recipient.save
       survey_import.save
+      survey.activate
       message.save
     end
 
