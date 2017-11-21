@@ -51,4 +51,44 @@ describe Qualtrics::Submission, vcr: true do
     expect(submission.time_stamp).to eql(time_stamp)
   end
 
+  it 'has a result' do
+    result = 'Success'
+
+    submission = Qualtrics::Submission.new({
+      result: result
+    })
+
+    expect(submission.result).to eql(result)
+  end
+
+  it 'has a type' do
+    type = 'SurveyStarted'
+
+    submission = Qualtrics::Submission.new({
+      type: type
+    })
+
+    expect(submission.type).to eql(type)
+  end
+
+  it 'has a session id' do
+    session_id = 'asdfghjkl'
+
+    submission = Qualtrics::Submission.new({
+      session_id: session_id
+    })
+
+    expect(submission.session_id).to eql(session_id)
+  end
+
+  it 'has a read' do
+    read = true
+
+    submission = Qualtrics::Submission.new({
+      read: read
+    })
+
+    expect(submission.read).to eql(read)
+  end
+
 end

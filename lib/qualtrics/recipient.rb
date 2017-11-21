@@ -105,6 +105,13 @@ module Qualtrics
       end
     end
 
+    def email_history
+      info_hash["RecipientEmailHistory"].map do |r|
+        response = Hash[r.map{|k,v| [Qualtrics::Submission.email_map[k], v]}]
+        Qualtrics::Submission.new(response)
+      end
+    end
+
     protected
     def update_params
       {

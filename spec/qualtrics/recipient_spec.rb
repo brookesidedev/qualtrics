@@ -197,16 +197,37 @@ describe Qualtrics::Recipient, :vcr => true  do
               'SurveyID' => 'survey_id',
               'TimeStamp' => '2015-03-02 11:50:40',
               'EmailDistributionID' => 'distribution_id',
-              'FinishedSurvey' => true}]
+              'FinishedSurvey' => true}],
+          'RecipientEmailHistory' => [
+             {
+               'EmailDistributionID' => 'distribution_id',
+               'Type'                => 'Invite',
+               'Date'                => '2017-04-11 09:48:50',
+               'Result'              => 'Success',
+               'SurveyID'            => 'survey_id',
+               'SessionID'           => 'FOR URL!',
+               'Read'                 => true
+             }]
         }
       )
 
       response = recipient.response_history[0]
+
       expect(response.distribution_id).to eql('distribution_id')
       expect(response.finished_survey).to eql(true)
       expect(response.id).to eql('response_id')
       expect(response.survey_id).to eql('survey_id')
       expect(response.time_stamp).to eql('2015-03-02 11:50:40')
+
+      email = recipient.email_history[0]
+
+      expect(email.distribution_id).to eql('distribution_id')
+      expect(email.type).to eql('Invite')
+      expect(email.time_stamp).to eql('2017-04-11 09:48:50')
+      expect(email.result).to eql('Success')
+      expect(email.survey_id).to eql('survey_id')
+      expect(email.session_id).to eql('FOR URL!')
+      expect(email.read).to eql(true)
     end
   end
 end
