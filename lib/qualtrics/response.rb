@@ -1,5 +1,6 @@
 require 'json'
 require 'csv'
+require 'active_support/core_ext/hash'
 
 module Qualtrics
 	class Response
@@ -16,7 +17,7 @@ module Qualtrics
     end
 
     def result
-      if content_type == 'application/vnd.msexcel'
+      if content_type == 'application/vnd.msexcel' || content_type =~ /xml/
         body.nil? ? {} : body
       else
         body['Result'].nil? ? {} : body['Result']
@@ -39,6 +40,8 @@ module Qualtrics
           @body = @raw_response.body
         elsif content_type =~ /text\/html/
           @body = @raw_response.body
+        elsif content_type =~ /xml/
+          @body = Hash.from_xml(@raw_response.body)
         else
           raise Qualtrics::UnexpectedContentType, content_type
         end

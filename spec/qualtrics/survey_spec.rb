@@ -126,6 +126,14 @@ describe Qualtrics::Survey, :vcr => true  do
 
       expect(Qualtrics::Survey.get_survey(survey.id)).to_not be false
     end
+
+    it 'can export a survey in xml format' do
+      survey_import.save
+
+      result = Qualtrics::Survey.new(id: survey.id).to_xml
+
+      expect(result['SurveyDefinition']['SurveyName']).to eql 'Complex survey'
+    end
   end
 
 end

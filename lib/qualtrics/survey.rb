@@ -104,5 +104,17 @@ module Qualtrics
       })
       response.success?
     end
+
+    def to_xml
+      response = get('getSurvey', {
+        'SurveyID' => id
+      })
+
+      if response.status == 200
+        response.result
+      else
+        false
+      end
+    end
   end
 end
